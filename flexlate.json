@@ -2,7 +2,7 @@
   "template_sources": [
     {
       "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
-      "path": "../../home/runner/work/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws",
+      "path": "../copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "type": "copier",
       "version": "7f1a817277920d89f327931f4f6c6d8d",
       "git_url": null,
