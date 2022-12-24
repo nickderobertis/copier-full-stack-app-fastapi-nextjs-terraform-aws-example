@@ -1,0 +1,43 @@
+
+name: Rollback infrastructure
+description: "Rolls back infrastructure to a given SHA."
+inputs:
+  sha:
+    required: true
+    description: "The Git SHA to rollback to."
+  environment:
+    description: 'The environment to rollback in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.sha }}
+    - name: Retrieve OpenAPI codegen files
+      uses: actions/download-artifact@v3
+      with:
+        name: openapi-codegen
+        path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+    - uses: ./.github/actions/modify-infra
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Archive infra generated files
+      uses: actions/upload-artifact@v3
+      with:
+        name: infra-generated-${{ inputs.environment }}
+        path: infra/${{ inputs.environment }}/generated

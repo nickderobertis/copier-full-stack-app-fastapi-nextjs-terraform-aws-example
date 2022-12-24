@@ -1,0 +1,3 @@
+additionalProperties:
+  typescriptThreePlus: true
+  withInterfaces: true

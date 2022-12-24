@@ -1,0 +1,32 @@
+name: Health Check of Frontend and API
+description: "Waits until the frontend and API are healthy."
+inputs:
+  api-url:
+    description: 'The API URL of the preview.'
+    required: true
+  fe-url:
+    description: 'The FE URL of the preview.'
+    required: true
+  monitoring-url:
+    description: 'The monitoring URL of the preview.'
+    required: true
+  max-attempts:
+    description: Number of unsuccessful attempts to call URL before giving up
+    required: false
+    default: "1"
+  retry-delay:
+    description: Time between attempts in seconds
+    required: false
+    default: "3"
+
+runs:
+  using: composite
+  steps:
+    - name: Check the frontend, API, and monitoring URLs
+      shell: bash
+      run: |
+        curl_opts="--retry ${{ inputs.max-attempts }} --retry-delay ${{ inputs.retry-delay }} --fail --retry-connrefused -Lsv"
+        curl $curl_opts ${{ inputs.fe-url }}
+        curl $curl_opts ${{ inputs.api-url }}/health-check
+        # Allow insecure connections to the monitoring URL because it's self-signed
+        curl $curl_opts -k ${{ inputs.monitoring-url }}

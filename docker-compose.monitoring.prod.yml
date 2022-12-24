@@ -1,0 +1,28 @@
+services:
+  network-exporter:
+    image: $DOCKER_REGISTRY/${APP_NAME}-network-exporter-ecr:$NETWORK_EXPORTER_TAG
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ${APP_NAME}/network-exporter
+        awslogs-region: $PROMETHEUS_AWS_REGION
+        awslogs-create-group: "true"
+  grafana:
+    image: $DOCKER_REGISTRY/${APP_NAME}-grafana-ecr:$GRAFANA_TAG
+    ports:
+      - 80:4001
+      - 443:4001
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ${APP_NAME}/grafana
+        awslogs-region: $PROMETHEUS_AWS_REGION
+        awslogs-create-group: "true"
+  prometheus:
+    image: $DOCKER_REGISTRY/${APP_NAME}-prometheus-ecr:$PROMETHEUS_TAG
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ${APP_NAME}/prometheus
+        awslogs-region: $PROMETHEUS_AWS_REGION
+        awslogs-create-group: "true"

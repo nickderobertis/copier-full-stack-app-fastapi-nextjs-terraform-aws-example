@@ -1,0 +1,187 @@
+[
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T19:05:29.354Z",
+      "uniqueQualifier": "661870291284",
+      "applicationName": "login",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/K3CXkFJ9hA5qUKFNtOwy4JaBPFc\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_challenge_method",
+            "multiValue": [
+              "password"
+            ]
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T18:23:06.151Z",
+      "uniqueQualifier": "661870291284",
+      "applicationName": "login",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/H_AkZGvRujeVzizCCQJ729OVaBs\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_challenge_method",
+            "multiValue": [
+              "password"
+            ]
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T13:33:14.976Z",
+      "uniqueQualifier": "661870291284",
+      "applicationName": "login",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/5Y6HYFYcrYa6qlTotptK9y4bHNs\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_challenge_method",
+            "multiValue": [
+              "password"
+            ]
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-07T23:47:40.859Z",
+      "uniqueQualifier": "764062905557",
+      "applicationName": "login",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/vAy-kJcmUmIXTFxbdLGRyqh7Y9o\"",
+    "actor": {
+      "email": "christoffer@claimfound.com",
+      "profileId": "118293822017007491884"
+    },
+    "ipAddress": "75.104.64.238",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_challenge_method",
+            "multiValue": [
+              "password"
+            ]
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-01T13:47:46.251Z",
+      "uniqueQualifier": "764062905557",
+      "applicationName": "login",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/9plhYiJh36YCU1Irz1punB4eqBw\"",
+    "actor": {
+      "email": "christoffer@claimfound.com",
+      "profileId": "118293822017007491884"
+    },
+    "ipAddress": "65.242.40.122",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_challenge_method",
+            "multiValue": [
+              "password"
+            ]
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": false
+          }
+        ]
+      }
+    ]
+  }
+]

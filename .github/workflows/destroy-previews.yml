@@ -1,0 +1,55 @@
+name: Destroy Previews for PR
+on:
+  pull_request:
+    types: [ closed ]
+
+env:
+  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+  APP_SHORT_NAME: cop
+  APP_STAGING_NAME_SUFFIX: staging
+  NETWORK_HEALTH_CHECK_INTERVAL: 30
+  NETWORK_STAGING_SUBDOMAIN: staging
+  SENTRY_ORGANIZATION_SLUG: nickderobertis
+
+jobs:
+  changes:
+    name: Determine Changed Paths
+    runs-on: ubuntu-20.04
+    outputs:
+      api: ${{ steps.changes.outputs.api }}
+      fe: ${{ steps.changes.outputs.fe }}
+      infra: ${{ steps.changes.outputs.infra }}
+      monitoring: ${{ steps.changes.outputs.monitoring }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/changed-paths
+        id: changes
+
+  api-preview-destroy:
+    runs-on: ubuntu-20.04
+    if: needs.changes.outputs.infra != 'true' && needs.changes.outputs.migrations != 'true' && needs.changes.outputs.api == 'true'
+    needs: changes
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/modify-infra
+        with:
+          environment: api-preview
+          terragrunt-command: run-all destroy
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+
+  infra-preview-destroy:
+    runs-on: ubuntu-20.04
+    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.migrations == 'true'
+    needs: changes
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/modify-infra
+        with:
+          environment: infra-preview
+          terragrunt-command: run-all destroy
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}

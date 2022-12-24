@@ -1,0 +1,38 @@
+name: Migration tests
+description: "Migration tests"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup-api-integration-test
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Run migrations initial up
+      shell: bash
+      run: |
+        docker-compose run --rm api pipenv run python -m alembic upgrade head
+    - name: Run migrations down
+      shell: bash
+      run: |
+        docker-compose run --rm api pipenv run python -m alembic downgrade base
+    - name: Run second migrations up
+      shell: bash
+      run: |
+        docker-compose run --rm api pipenv run python -m alembic upgrade head

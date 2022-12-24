@@ -1,0 +1,14 @@
+branches:
+  - '+([0-9])?(.{+([0-9]),x}).x'
+  - main
+  - name: beta
+    prerelease: true
+  - name: alpha
+    prerelease: true
+
+repositoryUrl: https://github.com/nickderobertis/copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/github"

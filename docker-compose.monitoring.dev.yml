@@ -1,0 +1,22 @@
+services:
+  network-exporter:
+    build:
+      context: network-exporter
+      args:
+        AWS_DEFAULT_REGION: $PROMETHEUS_AWS_REGION
+        APP_NAME: $APP_NAME
+    volumes:
+      - ./network-exporter:/exporter
+  grafana:
+    build:
+      context: grafana
+      args:
+        DOMAIN_NAME: $GRAFANA_DOMAIN_NAME
+        APP_NAME: $APP_NAME
+  prometheus:
+    build:
+      context: prometheus
+      args:
+        AWS_DEFAULT_REGION: $PROMETHEUS_AWS_REGION
+        PROMETHEUS_URL: $PROMETHEUS_URL
+        CLOUDWATCH_EXPORTER_URL_NO_SCHEME: $CLOUDWATCH_EXPORTER_URL_NO_SCHEME

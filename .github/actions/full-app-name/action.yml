@@ -1,0 +1,29 @@
+name: Get Full App Name
+description: "Gets the full application name based on the environment and subdomain"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+outputs:
+  name:
+    description: 'The full name of the app.'
+    value: ${{ steps.full-app-name.outputs.name }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get full app name
+      id: full-app-name
+      shell: bash
+      run: |
+        # TODO: Use local script in infra environment for this
+        # If the environment not prod, use the staging subdomain
+        if [[ ${{ inputs.environment }} != "prod" ]]; then
+          echo "::set-output name=name::${{ env.GLOBAL_APP_NAME }}-${{ inputs.staging-subdomain }}"
+        else
+          echo "::set-output name=name::${{ env.GLOBAL_APP_NAME }}-prod"
+        fi

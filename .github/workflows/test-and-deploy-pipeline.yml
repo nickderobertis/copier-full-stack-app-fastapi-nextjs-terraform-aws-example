@@ -1,0 +1,168 @@
+name: Deploy to Staging and Production
+
+on:
+  release:
+    types: [released]
+
+env:
+  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+  APP_SHORT_NAME: cop
+  APP_STAGING_NAME_SUFFIX: staging
+  NETWORK_HEALTH_CHECK_INTERVAL: 30
+  NETWORK_STAGING_SUBDOMAIN: staging
+  SENTRY_ORGANIZATION_SLUG: nickderobertis
+
+jobs:
+  changes:
+    name: Determine Changed Paths
+    runs-on: ubuntu-20.04
+    outputs:
+      api: ${{ steps.changes.outputs.api }}
+      fe: ${{ steps.changes.outputs.fe }}
+      infra: ${{ steps.changes.outputs.infra }}
+      monitoring: ${{ steps.changes.outputs.monitoring }}
+      migrations: ${{ steps.changes.outputs.migrations }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nrwl/last-successful-commit-action@v1
+        id: last_successful_commit
+        with:
+          branch: main
+          workflow_id: test-and-deploy-pipeline.yml
+          github_token: ${{ secrets.GH_TOKEN }}
+      - uses: ./.github/actions/changed-paths
+        id: changes
+        with:
+          base: ${{ steps.last_successful_commit.outputs.commit_hash }}
+
+  codegen:
+    name: Codegen
+    runs-on: ubuntu-20.04
+    steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/actions/codegen
+
+  deploy-staging:
+    needs: [codegen, changes]
+    runs-on: ubuntu-20.04
+    outputs:
+      fe-url: ${{ steps.deploy.outputs.fe-url }}
+      api-url: ${{ steps.deploy.outputs.api-url }}
+      monitoring-url: ${{ steps.deploy.outputs.monitoring-url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/full-stack-deploy
+        id: deploy
+        with:
+          environment: staging
+          changed-fe: ${{ needs.changes.outputs.fe }}
+          changed-api: ${{ needs.changes.outputs.api }}
+          changed-infra: ${{ needs.changes.outputs.infra }}
+          changed-migrations: ${{ needs.changes.outputs.migrations }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  health-check-staging:
+    needs: deploy-staging
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/health-check
+        with:
+          api-url: ${{ needs.deploy-staging.outputs.api-url }}
+          fe-url: ${{ needs.deploy-staging.outputs.fe-url }}
+          monitoring-url: ${{ needs.deploy-staging.outputs.monitoring-url }}
+          # Wait up to 15 minutes for ECS to come up.
+          max-attempts: 150
+          retry-delay: 6
+
+  e2e-test-staging:
+    needs: health-check-staging
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/e2e-test
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          e2e-rapid-api-key: ${{ secrets.E2E_RAPID_API_KEY }}
+
+  rollback-staging:
+    runs-on: ubuntu-20.04
+    needs: [changes, deploy-staging, e2e-test-staging]
+    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Determine rollback commit
+        id: rollback
+        run: |
+          # Get immediate parent of the commit that triggered the workflow.
+          rollback_commit=$(git log --pretty=%P -n 1 "${{ github.ref }}")
+          echo "::set-output name=commit::${rollback_commit}"
+      - uses: ./.github/actions/rollback-infra
+        if: needs.changes.outputs.infra == 'true'
+        with:
+          sha: ${{ steps.rollback.outputs.commit }}
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - uses: ./.github/actions/rollback-fe
+        if: needs.changes.outputs.infra == 'false' && needs.changes.outputs.fe == 'true'
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - uses: ./.github/actions/rollback-api
+        if: needs.changes.outputs.infra == 'false' && needs.changes.outputs.api == 'true'
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-prod:
+    needs: [changes, e2e-test-staging]
+    runs-on: ubuntu-20.04
+    outputs:
+      fe-url: ${{ steps.deploy.outputs.fe-url }}
+      api-url: ${{ steps.deploy.outputs.api-url }}
+      monitoring-url: ${{ steps.deploy.outputs.monitoring-url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/full-stack-deploy
+        id: deploy
+        with:
+          environment: prod
+          changed-fe: ${{ needs.changes.outputs.fe }}
+          changed-api: ${{ needs.changes.outputs.api }}
+          changed-infra: ${{ needs.changes.outputs.infra }}
+          changed-migrations: ${{ needs.changes.outputs.migrations }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  health-check-prod:
+    needs: deploy-prod
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/health-check
+        with:
+          api-url: ${{ needs.deploy-prod.outputs.api-url }}
+          fe-url: ${{ needs.deploy-prod.outputs.fe-url }}
+          monitoring-url: ${{ needs.deploy-prod.outputs.monitoring-url }}
+          # Prod should already be up, so we don't need to wait.
+          max-attempts: 1
+
+
+  e2e-test-prod:
+    needs: health-check-prod
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/e2e-test
+        with:
+          environment: prod
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          e2e-rapid-api-key: ${{ secrets.E2E_RAPID_API_KEY }}

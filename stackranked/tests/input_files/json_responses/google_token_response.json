@@ -1,0 +1,297 @@
+[
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-11T12:32:01.574Z",
+      "uniqueQualifier": "-8401633594164521136",
+      "applicationName": "token",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/yRY2OHQJgdfKVj6p088Ct0lccoU\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "name": "authorize",
+        "parameters": [
+          {
+            "name": "client_id",
+            "value": "77185425430.apps.googleusercontent.com"
+          },
+          {
+            "name": "app_name",
+            "value": "Google Chrome"
+          },
+          {
+            "name": "client_type",
+            "value": "NATIVE_DESKTOP"
+          },
+          {
+            "name": "scope_data",
+            "multiMessageValue": [
+              {
+                "parameter": [
+                  {
+                    "name": "scope_name",
+                    "value": "https://www.google.com/accounts/OAuthLogin"
+                  },
+                  {
+                    "name": "product_bucket",
+                    "multiValue": [
+                      "IDENTITY"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scope",
+            "multiValue": [
+              "https://www.google.com/accounts/OAuthLogin"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-10T21:20:06.587Z",
+      "uniqueQualifier": "250361978903485853",
+      "applicationName": "token",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/zvIDTV4XGjG18pLot4g38GiAxIE\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "name": "authorize",
+        "parameters": [
+          {
+            "name": "client_id",
+            "value": "668750837207-4hpctuo833g318j8qddqgigucj2ojnt1.apps.googleusercontent.com"
+          },
+          {
+            "name": "app_name",
+            "value": "StackedRank"
+          },
+          {
+            "name": "client_type",
+            "value": "NATIVE_DESKTOP"
+          },
+          {
+            "name": "scope_data",
+            "multiMessageValue": [
+              {
+                "parameter": [
+                  {
+                    "name": "scope_name",
+                    "value": "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+                  },
+                  {
+                    "name": "product_bucket",
+                    "multiValue": [
+                      "GSUITE_ADMIN"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scope",
+            "multiValue": [
+              "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T19:03:57.962Z",
+      "uniqueQualifier": "-6178854401466508990",
+      "applicationName": "token",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/ptU3go-cFyl05hx_na6BTGZdJcY\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "name": "authorize",
+        "parameters": [
+          {
+            "name": "client_id",
+            "value": "668750837207-4hpctuo833g318j8qddqgigucj2ojnt1.apps.googleusercontent.com"
+          },
+          {
+            "name": "app_name",
+            "value": "StackedRank"
+          },
+          {
+            "name": "client_type",
+            "value": "NATIVE_DESKTOP"
+          },
+          {
+            "name": "scope_data",
+            "multiMessageValue": [
+              {
+                "parameter": [
+                  {
+                    "name": "scope_name",
+                    "value": "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+                  },
+                  {
+                    "name": "product_bucket",
+                    "multiValue": [
+                      "GSUITE_ADMIN"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scope",
+            "multiValue": [
+              "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T18:23:58.014Z",
+      "uniqueQualifier": "7118660981253391834",
+      "applicationName": "token",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/gxuVfvHplR2tC11MFeuY2g5ufVI\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "name": "authorize",
+        "parameters": [
+          {
+            "name": "client_id",
+            "value": "668750837207-4hpctuo833g318j8qddqgigucj2ojnt1.apps.googleusercontent.com"
+          },
+          {
+            "name": "app_name",
+            "value": "StackedRank"
+          },
+          {
+            "name": "client_type",
+            "value": "NATIVE_DESKTOP"
+          },
+          {
+            "name": "scope_data",
+            "multiMessageValue": [
+              {
+                "parameter": [
+                  {
+                    "name": "scope_name",
+                    "value": "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+                  },
+                  {
+                    "name": "product_bucket",
+                    "multiValue": [
+                      "GSUITE_ADMIN"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scope",
+            "multiValue": [
+              "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2022-08-09T18:23:06.025Z",
+      "uniqueQualifier": "-1181857232811013734",
+      "applicationName": "token",
+      "customerId": "C03ukgj11"
+    },
+    "etag": "\"_ZVRqe-BUDYcYeOIPo-gm6Eh1QaGne4ACjHHI6qsr6A/9-OL2dn6WV_pwAM6zesGQNg8khw\"",
+    "actor": {
+      "email": "nick@claimfound.com",
+      "profileId": "100058043523144100830"
+    },
+    "ipAddress": "108.18.228.155",
+    "events": [
+      {
+        "name": "authorize",
+        "parameters": [
+          {
+            "name": "client_id",
+            "value": "77185425430.apps.googleusercontent.com"
+          },
+          {
+            "name": "app_name",
+            "value": "Google Chrome"
+          },
+          {
+            "name": "client_type",
+            "value": "NATIVE_DESKTOP"
+          },
+          {
+            "name": "scope_data",
+            "multiMessageValue": [
+              {
+                "parameter": [
+                  {
+                    "name": "scope_name",
+                    "value": "https://www.google.com/accounts/OAuthLogin"
+                  },
+                  {
+                    "name": "product_bucket",
+                    "multiValue": [
+                      "IDENTITY"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scope",
+            "multiValue": [
+              "https://www.google.com/accounts/OAuthLogin"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

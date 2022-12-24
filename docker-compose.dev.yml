@@ -1,0 +1,21 @@
+services:
+  database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    restart: always
+  api:
+    build:
+      context: copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+    volumes:
+      - ./copier_full_stack_app_fastapi_nextjs_terraform_aws_example:/api
+    ports:
+      - 8001:8001
+    environment:
+      DB_HOST: "database"
+      RUN_MIGRATIONS_ON_STARTUP: "true"
+      VIRTUAL_ENV: /venv

@@ -1,0 +1,46 @@
+name: Preview Comment
+description: "Creates a comment on a PR with preview deployment details"
+inputs:
+  preview-name:
+    description: 'The name of the preview to put in the comment.'
+    required: true
+  api-url:
+    description: 'The API URL of the preview.'
+    required: true
+  fe-url:
+    description: 'The FE URL of the preview.'
+    required: true
+  monitoring-url:
+    description: 'The monitoring URL of the preview.'
+    required: true
+  grafana-password:
+    description: "The admin password to log into Grafana"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Terragrunt
+      uses: autero1/action-terragrunt@v1.1.1
+      with:
+        terragrunt_version: 0.38.9
+    - name: Find Comment
+      uses: peter-evans/find-comment@v2
+      id: find-comment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: "### ${{ inputs.preview-name }}"
+    - name: Create or update comment
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        comment-id: ${{ steps.find-comment.outputs.comment-id }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          ### ${{ inputs.preview-name }}
+          Frontend: ${{ inputs.fe-url }}
+          API: ${{ inputs.api-url }}
+          Monitoring: ${{ inputs.monitoring-url }}
+          Grafana Password: `${{ inputs.grafana-password }}`
+          Commit: ${{ github.event.pull_request.head.sha }}
+        edit-mode: replace
