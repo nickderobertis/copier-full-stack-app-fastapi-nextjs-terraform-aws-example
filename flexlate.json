@@ -15,10 +15,10 @@
     {
       "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "data": {
-        "author": "Nick DeRobertis",
         "full_name": "copier-full-stack-app-fastapi-nextjs-terraform-aws-example",
+        "short_description": "Example output for copier-full-stack-app-fastapi-nextjs-terraform-aws",
         "main_branch_name": "main",
-        "short_description": "Example output for copier-full-stack-app-fastapi-nextjs-terraform-aws"
+        "author": "Nick DeRobertis"
       },
       "version": "7f1a817277920d89f327931f4f6c6d8d",
       "add_mode": "local",
