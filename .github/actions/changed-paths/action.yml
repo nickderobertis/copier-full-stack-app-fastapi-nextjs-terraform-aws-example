@@ -1,0 +1,63 @@
+
+name: Get changed areas of the app
+description: "Get changed areas of the app based on paths changed"
+inputs:
+  base:
+    description: 'The base ref to compare against.'
+    required: false
+outputs:
+  api:
+    description: "Whether the API has changed"
+    value: ${{ steps.changes.outputs.api }}
+  fe:
+    description: "Whether the FE has changed"
+    value: ${{ steps.changes.outputs.fe }}
+  infra:
+    description: "Whether the infra has changed"
+    value: ${{ steps.changes.outputs.infra }}
+  monitoring:
+    description: "Whether the monitoring has changed"
+    value: ${{ steps.changes.outputs.monitoring }}
+  migrations:
+    description: "Whether the migrations have changed"
+    value: ${{ steps.changes.outputs.migrations }}
+
+runs:
+  using: composite
+  steps:
+    - name: Determine base ref
+      id: base-ref
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.base }}" ]; then
+          echo "::set-output name=ref::${{ github.ref }}"
+        else
+          echo "::set-output name=ref::${{ inputs.base }}"
+        fi
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        base: ${{ steps.base-ref.outputs.ref }}
+        filters: |
+          api:
+            - 'copier_full_stack_app_fastapi_nextjs_terraform_aws_example/**'
+          fe:
+            - 'frontend/**'
+          infra:
+            - 'infra/**'
+            - 'e2e/**'
+            - 'grafana/**'
+            - 'prometheus/**'
+            - 'network-exporter/**'
+            - 'airflow/**'
+            - 'docker-compose.*.yml'
+            # TODO: Narrow Github actions to only the ones that affect the infra
+            - '.github/**'
+          monitoring:
+            - 'grafana/**'
+            - 'prometheus/**'
+            - 'network-exporter/**'
+            - 'docker-compose.*.yml'
+          migrations:
+            - 'copier_full_stack_app_fastapi_nextjs_terraform_aws_example/alembic/versions/**'
+

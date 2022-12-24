@@ -1,0 +1,36 @@
+services:
+  network-exporter:
+    ports:
+      - 5000:5000
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  grafana:
+    ports:
+      - 4001:4001
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: $GRAFANA_PASSWORD
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SERVER_HTTP_PORT: 4001
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+      GF_AUTH_SIGV4_AUTH_ENABLED: "true"
+      GF_SERVER_CERT_KEY: /etc/grafana/grafana.key
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_FILE: /etc/grafana/grafana.crt
+      GF_SERVER_ROOT_URL: $GRAFANA_URL
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION: $PROMETHEUS_AWS_REGION
+      AWS_SDK_LOAD_CONFIG: "true"
+      PROMETHEUS_URL: ${PROMETHEUS_URL:-http://prometheus:9090}
+      APP_NAME: $APP_NAME
+    restart: always
+  prometheus:
+    ports:
+      - 9090:9090
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION: $PROMETHEUS_AWS_REGION
+    restart: always

@@ -1,0 +1,97 @@
+name: Preview Terragrunt
+description: "Creates a preview deployment with Terragrunt"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+  preview-name:
+    description: 'The name of the preview to put in the comment.'
+    required: true
+  changed-migrations:
+    description: 'Whether the migrations changed'
+    required: true
+    default: "false"
+
+outputs:
+  api-url:
+    description: 'The API URL of the preview.'
+    value: ${{ steps.details.outputs.api-url }}
+  fe-url:
+    description: 'The FE URL of the preview.'
+    value: ${{ steps.details.outputs.fe-url }}
+  monitoring-url:
+    description: 'The monitoring URL of the preview.'
+    value: ${{ steps.details.outputs.monitoring-url }}
+
+runs:
+  using: composite
+  steps:
+    # TODO: Don't pull when api changed
+    # TODO: Handle pulling for monitoring images
+    - uses: ./.github/actions/setup-terragrunt
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Pull image if it exists to prevent re-building
+      shell: bash
+      run: ./infra/${{ inputs.environment }}/scripts/pull-api-docker-image.sh || true
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        APP_STAGING_NAME_SUFFIX: pr-${{ github.event.number }}
+        NETWORK_STAGING_SUBDOMAIN: pr-${{ github.event.number }}
+    - uses: ./.github/actions/db-exists
+      id: db-exists
+      with:
+          environment: ${{ inputs.environment }}
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/run-migrations
+      name: Run migrations for existing databases
+      if: steps.db-exists.outputs.exists == 'true' && inputs.changed-migrations == 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/modify-infra
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: pr-${{ github.event.number }}
+    - uses: ./.github/actions/run-migrations
+      name: Run migrations for new databases
+      if: steps.db-exists.outputs.exists != 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/app-details
+      id: details
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: pr-${{ github.event.number }}
+    - uses: ./.github/actions/preview-comment
+      with:
+        preview-name: ${{ inputs.preview-name }}
+        api-url: ${{ steps.details.outputs.api-url }}
+        fe-url: ${{ steps.details.outputs.fe-url }}
+        monitoring-url: ${{ steps.details.outputs.monitoring-url }}
+        grafana-password: ${{ steps.details.outputs.grafana-password }}

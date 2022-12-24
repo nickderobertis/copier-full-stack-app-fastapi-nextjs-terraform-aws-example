@@ -1,0 +1,227 @@
+name: Deploy Previews for PR
+on: [pull_request]
+
+env:
+  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+  APP_SHORT_NAME: cop
+  NETWORK_HEALTH_CHECK_INTERVAL: 30
+  SENTRY_ORGANIZATION_SLUG: nickderobertis
+
+jobs:
+  changes:
+    name: Determine Changed Paths
+    runs-on: ubuntu-20.04
+    outputs:
+      api: ${{ steps.changes.outputs.api }}
+      fe: ${{ steps.changes.outputs.fe }}
+      infra: ${{ steps.changes.outputs.infra }}
+      migrations: ${{ steps.changes.outputs.migrations }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/changed-paths
+        id: changes
+
+  lint-python-and-unit-test:
+    name: Lint Python and Unit Test
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/lint-python-and-unit-test-api
+
+  integration-test-api:
+    name: Integration Test API
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.migrations == 'true'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/integration-test-api
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+
+  migration-test:
+    name: Migration Test
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: needs.changes.outputs.migrations == 'true'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/migration-test
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+
+  codegen:
+    name: Codegen
+    runs-on: ubuntu-20.04
+    steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/actions/codegen
+
+  fe-preview:
+    runs-on: ubuntu-20.04
+    # FE will get deployed with api or infra previews, so only deploy otherwise
+    if: needs.changes.outputs.infra != 'true' && needs.changes.outputs.api != 'true'
+    needs: [changes, codegen]
+    outputs:
+      fe-url: ${{ steps.deploy-vercel-preview.outputs.preview-url }}
+      # Always use staging API for FE previews
+      api-url: https://api-staging.copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+      monitoring-url: https://monitoring-staging.copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+    steps:
+      - uses: actions/checkout@v3
+      - name: Retrieve OpenAPI codegen files
+        uses: actions/download-artifact@v3
+        with:
+          name: openapi-codegen
+
+          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+      - uses: ./.github/actions/setup-terragrunt
+        with:
+          environment: staging
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+      - name: Get Vercel Project ID
+        id: vercel-project-id
+        run: |
+          cd ./infra/staging/frontend
+          project_id=$(terragrunt output -raw vercel_project_id)
+          echo "::set-output name=vercel-project-id::${project_id}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          APP_EMAIL_USER: ${{ secrets.APP_EMAIL_USER }}
+          APP_EMAIL_PASSWORD: ${{ secrets.APP_EMAIL_PASSWORD }}
+      - uses: amondnet/vercel-action@v25
+        id: deploy-vercel-preview
+        with:
+          vercel-token: ${{ secrets.VERCEL_API_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ steps.vercel-project-id.outputs.vercel-project-id }}
+          working-directory: ./frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+          # TODO: Getting Error! The deployment is not ready when using aliases
+#          alias-domains: |
+#            pr-{{PR_NUMBER}}.vercel.app
+
+  api-preview:
+    runs-on: ubuntu-20.04
+    if: needs.changes.outputs.infra != 'true' && needs.changes.outputs.migrations != 'true' && needs.changes.outputs.api == 'true'
+    needs: [changes, codegen]
+    outputs:
+      fe-url: ${{ steps.preview-terragrunt.outputs.fe-url }}
+      api-url: ${{ steps.preview-terragrunt.outputs.api-url }}
+      monitoring-url: ${{ steps.preview-terragrunt.outputs.monitoring-url }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Retrieve OpenAPI codegen files
+        uses: actions/download-artifact@v3
+        with:
+          name: openapi-codegen
+          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+      - uses: ./.github/actions/preview-terragrunt
+        id: preview-terragrunt
+        with:
+          environment: api-preview
+          preview-name: API Preview
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+          changed-migrations: ${{ needs.changes.outputs.migrations }}
+
+
+  infra-preview:
+    runs-on: ubuntu-20.04
+    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.migrations == 'true'
+    needs: [ changes, codegen ]
+    outputs:
+      fe-url: ${{ steps.preview-terragrunt.outputs.fe-url }}
+      api-url: ${{ steps.preview-terragrunt.outputs.api-url }}
+      monitoring-url: ${{ steps.preview-terragrunt.outputs.monitoring-url }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Retrieve OpenAPI codegen files
+        uses: actions/download-artifact@v3
+        with:
+          name: openapi-codegen
+          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+      - uses: ./.github/actions/preview-terragrunt
+        id: preview-terragrunt
+        with:
+          environment: infra-preview
+          preview-name: Full Infrastructure Preview
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          staging-subdomain: pr-${{ github.event.number }}
+          changed-migrations: ${{ needs.changes.outputs.migrations }}
+
+  health-check:
+    needs: [ fe-preview, api-preview, infra-preview ]
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    outputs:
+      fe-url: ${{ steps.urls-and-env.outputs.fe-url }}
+      api-url: ${{ steps.urls-and-env.outputs.api-url }}
+      terragrunt-env: ${{ steps.urls-and-env.outputs.terragrunt-env }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Determine URLs and Terragrunt environment
+        id: urls-and-env
+        shell: bash
+        run: |
+          # Get the fe-url and api-url from either the fe-preview job, the api-preview job,
+          # or the infra-preview job, whichever is defined
+          FE_URL=${{ needs.fe-preview.outputs.fe-url }}
+          API_URL=${{ needs.fe-preview.outputs.api-url }}
+          MONITORING_URL=${{ needs.fe-preview.outputs.monitoring-url }}
+          TERRAGRUNT_ENV=staging
+          if [ -z "$FE_URL" ]; then
+              FE_URL=${{ needs.api-preview.outputs.fe-url }}
+              API_URL=${{ needs.api-preview.outputs.api-url }}
+              MONITORING_URL=${{ needs.api-preview.outputs.monitoring-url }}
+              TERRAGRUNT_ENV=api-preview
+          fi
+          if [ -z "$FE_URL" ]; then
+              FE_URL=${{ needs.infra-preview.outputs.fe-url }}
+              API_URL=${{ needs.infra-preview.outputs.api-url }}
+              MONITORING_URL=${{ needs.infra-preview.outputs.monitoring-url }}
+              TERRAGRUNT_ENV=infra-preview
+          fi
+          echo "::set-output name=fe-url::$FE_URL"
+          echo "::set-output name=api-url::$API_URL"
+          echo "::set-output name=monitoring-url::$MONITORING_URL"
+          echo "::set-output name=terragrunt-env::$TERRAGRUNT_ENV"
+      - uses: ./.github/actions/health-check
+        with:
+          api-url: ${{ steps.urls-and-env.outputs.api-url }}
+          fe-url: ${{ steps.urls-and-env.outputs.fe-url }}
+          monitoring-url: ${{ steps.urls-and-env.outputs.monitoring-url }}
+          # Wait up to 15 minutes for ECS to come up.
+          max-attempts: 150
+          retry-delay: 6
+
+  e2e-test:
+    needs: [health-check]
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/e2e-test
+        with:
+          environment: ${{ needs.health-check.outputs.terragrunt-env }}
+          staging-subdomain: pr-${{ github.event.number }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          e2e-rapid-api-key: ${{ secrets.E2E_RAPID_API_KEY }}
+

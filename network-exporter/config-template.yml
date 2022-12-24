@@ -1,0 +1,105 @@
+apiVersion: v1alpha1
+sts-endpoint: $AWS_DEFAULT_REGION
+labels-snake-case: true
+discovery:
+  exportedTagsOnMetrics:
+    ec2:
+      - Name
+    alb:
+      - Name
+  jobs:
+  - type: alb
+    period: 30
+    regions:
+      - $AWS_DEFAULT_REGION
+    searchTags:
+      - key: Project
+        value: $APP_NAME
+    metrics:
+      - name: HealthyHostCount
+        statistics: [Average]
+      - name: UnHealthyHostCount
+        statistics: [ Average ]
+      - name: RequestCount
+        statistics: [ Sum ]
+      - name: TargetResponseTime
+        statistics: [ Average, p99, p95, p90 ]
+      - name: HTTPCode_Target_2XX_Count
+        statistics: [ Sum ]
+      - name: HTTPCode_Target_4XX_Count
+        statistics: [ Sum ]
+      - name: HTTPCode_Target_5XX_Count
+        statistics: [ Sum ]
+  - type: s3
+    regions:
+      - $AWS_DEFAULT_REGION
+    metrics:
+      - name: NumberOfObjects
+        statistics:
+          - Average
+        period: 86400
+        length: 172800
+      - name: BucketSizeBytes
+        statistics:
+          - Average
+        period: 86400
+        length: 172800
+  - type: route53
+    regions:
+      - $AWS_DEFAULT_REGION
+    searchTags:
+      - key: Project
+        value: $APP_NAME
+    period: 30
+    metrics:
+      - name: HealthCheckStatus
+        statistics:
+          - Average
+  - type: ecs-containerinsights
+    regions:
+      - $AWS_DEFAULT_REGION
+    period: 30
+    searchTags:
+      - key: Project
+        value: $APP_NAME
+    metrics:
+      - name: CpuUtilized
+        statistics: [Average]
+      - name: MemoryUtilized
+        statistics: [Average]
+      - name: RunningTaskCount
+        statistics: [Average]
+      - name: StorageWriteBytes
+        statistics: [Average]
+      - name: StorageReadBytes
+        statistics: [Average]
+      - name: NetworkRxBytes
+        statistics: [Average]
+      - name: NetworkTxBytes
+        statistics: [Average]
+  - type: ec2
+    regions:
+      - $AWS_DEFAULT_REGION
+    period: 30
+    searchTags:
+      - key: Project
+        value: $APP_NAME
+    metrics:
+      - name: CPUCreditUsage
+        statistics: [Average]
+      - name: CPUCreditBalance
+        statistics: [Average]
+      - name: CPUUtilization
+        statistics: [Average]
+      - name: DiskReadBytes
+        statistics: [Average]
+      - name: DiskWriteBytes
+        statistics: [Average]
+      - name: NetworkIn
+        statistics: [Average]
+      - name: NetworkOut
+        statistics: [Average]
+      - name: StatusCheckFailed
+        statistics: [Average]
+      # TODO: memory monitoring. Need to install and configure cloudwatch agent on ec2 instances
+      # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html

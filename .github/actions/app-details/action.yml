@@ -1,0 +1,79 @@
+name: Get App URLS
+description: "Gets the frontend and backend URLs for the given app details"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+outputs:
+  api-url:
+    description: 'The API URL of the preview.'
+    value: ${{ steps.urls.outputs.api-url }}
+  fe-url:
+    description: 'The FE URL of the preview.'
+    value: ${{ steps.urls.outputs.fe-url }}
+  monitoring-url:
+    description: 'The monitoring URL of the preview.'
+    value: ${{ steps.urls.outputs.monitoring-url }}
+  grafana-password:
+    description: "The admin password to log into Grafana"
+    value: ${{ steps.urls.outputs.grafana-password }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: pipenv
+    - name: Install Pipenv
+      uses: dschep/install-pipenv-action@v1
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ./e2e
+        pipenv sync
+    - name: Get full app name
+      id: full-app-name
+      uses: ./.github/actions/full-app-name
+      with:
+        environment: ${{ inputs.environment }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Get AWS region
+      id: aws-region
+      shell: bash
+      run: |
+        cd ./infra/${{ inputs.environment }}
+        echo "::set-output name=region::$(./scripts/region.sh)"
+    - name: Get app URLs
+      id: urls
+      shell: bash
+      run: |
+        cd ./e2e
+        
+        app_params=$(pipenv run python -m ext_aws.params FE_URL API_URL MONITORING_URL)
+        fe_url=$(echo "$app_params" | jq -r '.FE_URL')
+        api_url=$(echo "$app_params" | jq -r '.API_URL')
+        monitoring_url=$(echo "$app_params" | jq -r '.MONITORING_URL')
+        
+        monitoring_params=$(pipenv run python -m ext_aws.params --param-section monitoring GRAFANA_PASSWORD)
+        grafana_password=$(echo "$monitoring_params" | jq -r '.GRAFANA_PASSWORD')
+        
+        echo "::set-output name=fe-url::$fe_url"
+        echo "::set-output name=api-url::$api_url"
+        echo "::set-output name=monitoring-url::$monitoring_url"
+        echo "::set-output name=grafana-password::$grafana_password"
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_DEFAULT_REGION: ${{ steps.aws-region.outputs.region }}
+        APP_NAME: ${{ steps.full-app-name.outputs.name }}

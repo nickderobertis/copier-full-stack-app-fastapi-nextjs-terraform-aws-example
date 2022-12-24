@@ -1,0 +1,48 @@
+name: Rollback API
+description: "Rolls back the API to the last deployment."
+inputs:
+  environment:
+    description: 'The environment to rollback in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup-terragrunt
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: pipenv
+    - name: Install Pipenv
+      shell: bash
+      run: pip install pipenv
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ./infra
+        pipenv sync
+    - name: AWS Rollback
+      shell: bash
+      run: |
+        cd ./infra
+        pipenv run ./${{ inputs.environment }}/scripts/rollback-fargate.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        NETWORK_STAGING_SUBDOMAIN: ${{ inputs.staging-subdomain }}
+        APP_STAGING_NAME_SUFFIX: ${{ inputs.staging-subdomain }}

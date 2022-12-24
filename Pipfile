@@ -1,0 +1,31 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+sphinx = "*"
+sphinx-autobuild = "*"
+sphinx-autodoc-typehints = "*"
+sphinxcontrib-fulltoc = "*"
+sphinx-paramlinks = "*"
+sphinx-gallery = "*"
+sphinx-copybutton = "*"
+twine = "*"
+pytest = "*"
+pypandoc = "*"
+flexlate = "*"
+myst-parser = "*"
+sphinx-material = "*"
+nox = "*"
+jupyter = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+google-api-python-client-stubs = "*"
+fastapi = "*"
+uvicorn = "*"
+fastapi-users = {extras = ["sqlalchemy"], version = "*"}
+asyncpg = "*"

@@ -1,0 +1,67 @@
+name: Run E2E tests
+description: "Runs end-to-end tests against a live deployment"
+inputs:
+  environment:
+    description: 'The environment to run e2e tests against.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+  revision:
+    description: 'The migration revision to deploy.'
+    required: true
+    default: head
+  command:
+    description: 'The alembic command to run.'
+    required: true
+    default: upgrade
+
+runs:
+  using: composite
+  steps:
+    - name: Setup OpenVPN3
+      uses: myci-actions/add-deb-repo@10
+      with:
+        repo: deb https://swupdate.openvpn.net/community/openvpn3/repos focal main
+        repo-name: openvpn3
+        keys-asc: https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub
+        install: openvpn3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: pipenv
+    - name: Install Pipenv
+      uses: dschep/install-pipenv-action@v1
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ./copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        pipenv sync
+    - uses: ./.github/actions/load-secrets-into-env
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Run migrations
+      shell: bash
+      run: |
+        orig_dir=$(pwd)
+        cd ./infra/${{ inputs.environment }}
+        # Connect to VPC via OpenVPN so migrations can be run
+        ./scripts/connect-vpn.sh
+
+        # Actually run migrations
+        cd $orig_dir/copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        pipenv run alembic ${{ inputs.command }} ${{ inputs.revision }}
+
+        # Disconnect VPN
+        cd $orig_dir/infra/${{ inputs.environment }}
+        ./scripts/disconnect-vpn.sh

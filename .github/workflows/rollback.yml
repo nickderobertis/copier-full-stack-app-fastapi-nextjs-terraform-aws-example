@@ -1,0 +1,94 @@
+name: Rollback the last Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to rollback'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - staging
+          - prod
+      rollback-frontend:
+        description: 'Rollback the frontend?'
+        required: true
+        default: false
+        type: boolean
+      rollback-api:
+        description: 'Rollback the API?'
+        required: true
+        default: false
+        type: boolean
+      rollback-infra:
+        description: 'Rollback the infrastructure?'
+        required: true
+        default: false
+        type: boolean
+      rollback-migrations:
+        description: 'Rollback the migrations?'
+        required: true
+        default: false
+        type: boolean
+      rollback-sha:
+        description: 'The SHA to rollback to for infrastructure or migrations. Not yet supported for API or FE.'
+        required: false
+        default: ''
+        type: string
+
+env:
+  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+  APP_SHORT_NAME: cop
+  APP_STAGING_NAME_SUFFIX: staging
+  NETWORK_HEALTH_CHECK_INTERVAL: 30
+  NETWORK_STAGING_SUBDOMAIN: staging
+  SENTRY_ORGANIZATION_SLUG: nickderobertis
+
+jobs:
+  rollback-migrations:
+    if: inputs.rollback-migrations == true
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rollback-migrations
+        with:
+          sha: ${{ inputs.rollback-sha }}
+          environment: ${{ inputs.environment }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  rollback-infra:
+    if: inputs.rollback-infra == true
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rollback-infra
+        with:
+          sha: ${{ inputs.rollback-sha }}
+          environment: ${{ inputs.environment }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  rollback-fe:
+    if: inputs.rollback-frontend == true
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rollback-fe
+        with:
+          environment: ${{ inputs.environment }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  rollback-api:
+    if: inputs.rollback-api == true
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rollback-api
+        with:
+          environment: ${{ inputs.environment }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

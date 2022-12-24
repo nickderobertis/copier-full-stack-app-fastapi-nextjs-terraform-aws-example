@@ -1,0 +1,110 @@
+
+name: Deploy infrastructure
+description: "Deploys infrastructure"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  changed-fe:
+    description: "Whether the frontend changed"
+    required: true
+    default: "true"
+  changed-api:
+    description: "Whether the API changed"
+    required: true
+    default: "true"
+  changed-infra:
+    description: "Whether the infrastructure changed"
+    required: true
+    default: "true"
+  changed-migrations:
+    description: "Whether migrations changed"
+    required: true
+    default: "true"
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+
+outputs:
+  api-url:
+    description: 'The API URL of the deployment.'
+    value: ${{ steps.details.outputs.api-url }}
+  fe-url:
+    description: 'The FE URL of the deployment.'
+    value: ${{ steps.details.outputs.fe-url }}
+  monitoring-url:
+    description: 'The monitoring URL of the deployment.'
+    value: ${{ steps.details.outputs.monitoring-url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Retrieve OpenAPI codegen files
+      uses: actions/download-artifact@v3
+      with:
+        name: openapi-codegen
+        path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+    - uses: ./.github/actions/db-exists
+      id: db-exists
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/run-migrations
+      name: Run migrations for existing databases
+      if: steps.db-exists.outputs.exists == 'true' && inputs.changed-migrations == 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/modify-infra
+      if: inputs.changed-infra == 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/run-migrations
+      name: Run migrations for new databases
+      if: steps.db-exists.outputs.exists != 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - uses: ./.github/actions/deploy-fe
+      if: inputs.changed-infra != 'true' && inputs.changed-fe == 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+    - uses: ./.github/actions/deploy-api
+      if: inputs.changed-infra != 'true' && inputs.changed-api == 'true'
+      with:
+        environment: ${{ inputs.environment }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+    - uses: ./.github/actions/app-details
+      id: details
+      with:
+        environment: ${{ inputs.environment }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        staging-subdomain: ${{ inputs.staging-subdomain }}
+    - name: Archive infra generated files
+      if: needs.changes.outputs.infra == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: infra-generated-${{ inputs.environment }}
+        path: infra/${{ inputs.environment }}/generated

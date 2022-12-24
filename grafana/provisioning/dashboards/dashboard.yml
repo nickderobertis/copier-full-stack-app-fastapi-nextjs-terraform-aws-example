@@ -1,0 +1,25 @@
+apiVersion: 1
+
+# TODO: billing dashboard
+#  https://github.com/monitoringartist/grafana-aws-cloudwatch-dashboards  and https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/gs_monitor_estimated_charges_with_cloudwatch.html
+
+# TODO: managed prometheus dashboard, monitoringartist one wasn't working
+
+# TODO: cloudwatch SNS dashboard once we have SNS setup
+
+# TODO: use yace for the following dashboards:
+#  - Route53 healthchecks
+#  - EC2 instance health
+#  - ELB health
+
+# TODO: postgres exporter and dashboard
+
+providers:
+- name: 'Prometheus'
+  orgId: 1
+  folder: ''
+  type: file
+  disableDeletion: false
+  editable: true
+  options:
+    path: /etc/grafana/provisioning/dashboards

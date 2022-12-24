@@ -1,0 +1,102 @@
+name: On-Demand Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to.'
+        required: true
+        type: choice
+        default: 'staging'
+        options:
+          - staging
+          - prod
+          - infra-preview
+      staging-subdomain:
+        description: 'The subdomain to use for infrastructure preview deploys.'
+        required: true
+        default: staging
+      deploy-fe:
+        description: 'Whether to deploy the frontend.'
+        required: true
+        type: boolean
+        default: true
+      deploy-api:
+        description: 'Whether to deploy the API.'
+        required: true
+        type: boolean
+        default: true
+      deploy-infra:
+        description: 'Whether to deploy the infrastructure.'
+        required: true
+        type: boolean
+        default: true
+      run-migrations:
+        description: 'Whether to run migrations.'
+        required: true
+        type: boolean
+        default: true
+
+env:
+  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+  APP_SHORT_NAME: cop
+  NETWORK_HEALTH_CHECK_INTERVAL: 30
+  SENTRY_ORGANIZATION_SLUG: nickderobertis
+
+jobs:
+  codegen:
+    name: Codegen
+    runs-on: ubuntu-20.04
+    steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/actions/codegen
+
+  deploy:
+    needs: codegen
+    runs-on: ubuntu-20.04
+    outputs:
+      api-url: ${{ steps.deploy.outputs.api-url }}
+      fe-url: ${{ steps.deploy.outputs.fe-url }}
+      monitoring-url: ${{ steps.deploy.outputs.monitoring-url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/full-stack-deploy
+        id: deploy
+        with:
+          environment: ${{ inputs.environment }}
+          staging-subdomain: ${{ inputs.staging-subdomain }}
+          changed-fe: ${{ inputs.deploy-fe }}
+          changed-api: ${{ inputs.deploy-api }}
+          changed-infra: ${{ inputs.deploy-infra }}
+          changed-migrations: ${{ inputs.run-migrations }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  health-check:
+    needs: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/health-check
+        with:
+          api-url: ${{ needs.deploy.outputs.api-url }}
+          fe-url: ${{ needs.deploy.outputs.fe-url }}
+          monitoring-url: ${{ needs.deploy.outputs.monitoring-url }}
+          # Wait up to 15 minutes for ECS to come up.
+          max-attempts: 150
+          retry-delay: 6
+
+  e2e-test:
+    needs: [deploy, health-check]
+    if: inputs.environment != 'prod'
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/e2e-test
+        with:
+          environment: ${{ inputs.environment }}
+          staging-subdomain: ${{ inputs.staging-subdomain }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          e2e-rapid-api-key: ${{ secrets.E2E_RAPID_API_KEY }}

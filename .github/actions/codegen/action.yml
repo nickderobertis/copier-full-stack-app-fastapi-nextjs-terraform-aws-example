@@ -1,0 +1,26 @@
+name: Run codegen
+description: "Runs the OpenAPI codegen."
+
+runs:
+  using: composite
+  steps:
+    # If API has not changed, simply reuse the archived codegen
+    - name: Cache OpenAPI codegen files
+      id: cache-codegen
+      uses: actions/cache@v3
+      with:
+        path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+        key: openapi-codegen-${{ runner.os }}-${{ hashFiles('{{ package_folder }}/**') }}-${{ hashFiles('openapi-generate.sh') }}
+    - name: Build API container
+      shell: bash
+      if: steps.cache-codegen.outputs.cache-hit != 'true'
+      run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml build api
+    - name: Run codegen
+      shell: bash
+      if: steps.cache-codegen.outputs.cache-hit != 'true'
+      run: ./openapi-generate.sh
+    - name: Archive codegen files
+      uses: actions/upload-artifact@v3
+      with:
+        name: openapi-codegen
+        path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client

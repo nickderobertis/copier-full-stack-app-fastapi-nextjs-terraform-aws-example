@@ -1,0 +1,510 @@
+[
+  {
+    "actor": {
+      "alternateId": "nick@claimfound.com",
+      "displayName": "Nick DeRobertis",
+      "id": "00u1x43tzgPcPUSOn697",
+      "type": "User"
+    },
+    "authenticationContext": {
+      "authenticationStep": 0,
+      "externalSessionId": "unknown"
+    },
+    "client": {
+      "device": "Computer",
+      "geographicalContext": {
+        "city": "Falls Church",
+        "country": "United States",
+        "geolocation": {
+          "lat": 38.8597,
+          "lon": -77.198
+        },
+        "postalCode": "22042",
+        "state": "Virginia"
+      },
+      "id": "okta.2b1959c8-bcc0-56eb-a589-cfcfb7422f26",
+      "ipAddress": "108.18.228.155",
+      "userAgent": {
+        "browser": "CHROME",
+        "os": "Linux",
+        "rawUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+      },
+      "zone": "null"
+    },
+    "debugContext": {
+      "debugData": {
+        "initiationType": "NA",
+        "redirectUri": "https://trial-4917051.okta.com/enduser/callback",
+        "requestId": "YvOm9axWFiGqrHrPTnRP0QAAB8E",
+        "dtHash": "8da54d7e03e47b93c5a2327fe3b133610974bebdfc804d12a2cdeca029a4a5f5",
+        "signOnMode": "OpenID Connect",
+        "requestUri": "/oauth2/v1/token",
+        "threatSuspected": "false",
+        "url": "/oauth2/v1/token?"
+      }
+    },
+    "displayMessage": "User single sign on to app",
+    "eventType": "user.authentication.sso",
+    "legacyEventType": "app.auth.sso",
+    "outcome": {
+      "result": "SUCCESS"
+    },
+    "published": "2022-08-10T12:39:17.705Z",
+    "request": {
+      "ipChain": [
+        {
+          "geographicalContext": {
+            "city": "Falls Church",
+            "country": "United States",
+            "geolocation": {
+              "lat": 38.8597,
+              "lon": -77.198
+            },
+            "postalCode": "22042",
+            "state": "Virginia"
+          },
+          "ip": "108.18.228.155",
+          "version": "V4"
+        }
+      ]
+    },
+    "securityContext": {
+      "asNumber": 701,
+      "asOrg": "verizon",
+      "domain": "verizon.net",
+      "isProxy": false,
+      "isp": "verizon"
+    },
+    "severity": "INFO",
+    "target": [
+      {
+        "alternateId": "Okta Dashboard",
+        "detailEntry": {
+          "signOnModeType": "OPENID_CONNECT"
+        },
+        "displayName": "Okta Dashboard",
+        "id": "0oa1x43ty9B0p9jz6697",
+        "type": "AppInstance"
+      },
+      {
+        "alternateId": "nick@claimfound.com",
+        "displayName": "Nick DeRobertis",
+        "id": "0ua1x4rdg9DeQKK27697",
+        "type": "AppUser"
+      }
+    ],
+    "transaction": {
+      "detail": {},
+      "id": "YvOm9axWFiGqrHrPTnRP0QAAB8E",
+      "type": "WEB"
+    },
+    "uuid": "730bdc89-18a9-11ed-84c6-e3517ddef4b7",
+    "version": "0"
+  },
+  {
+    "actor": {
+      "alternateId": "nick@claimfound.com",
+      "displayName": "Nick DeRobertis",
+      "id": "00u1x43tzgPcPUSOn697",
+      "type": "User"
+    },
+    "authenticationContext": {
+      "authenticationStep": 0,
+      "externalSessionId": "unknown"
+    },
+    "client": {
+      "device": "Unknown",
+      "geographicalContext": {
+        "city": "Boardman",
+        "country": "United States",
+        "geolocation": {
+          "lat": 45.8234,
+          "lon": -119.7257
+        },
+        "postalCode": "97818",
+        "state": "Oregon"
+      },
+      "id": "okta.b58d5b75-07d4-5f25-bf59-368a1261a405",
+      "ipAddress": "44.238.82.114",
+      "userAgent": {
+        "browser": "UNKNOWN",
+        "os": "Unknown",
+        "rawUserAgent": "Okta-Integrations"
+      },
+      "zone": "null"
+    },
+    "debugContext": {
+      "debugData": {
+        "initiationType": "NA",
+        "redirectUri": "https://trial-4917051-admin.okta.com/admin/sso/callback",
+        "requestId": "YvOnoBLh-7Q87V90SW41jwAAD2I",
+        "dtHash": "74e5b139c3d7aa2de6d621fb0e1d035d4fada8137f33e5d1e3826e440392feab",
+        "signOnMode": "OpenID Connect",
+        "requestUri": "/oauth2/v1/token",
+        "threatSuspected": "false",
+        "url": "/oauth2/v1/token?"
+      }
+    },
+    "displayMessage": "User single sign on to app",
+    "eventType": "user.authentication.sso",
+    "legacyEventType": "app.auth.sso",
+    "outcome": {
+      "result": "SUCCESS"
+    },
+    "published": "2022-08-10T12:42:08.579Z",
+    "request": {
+      "ipChain": [
+        {
+          "geographicalContext": {
+            "city": "Boardman",
+            "country": "United States",
+            "geolocation": {
+              "lat": 45.8234,
+              "lon": -119.7257
+            },
+            "postalCode": "97818",
+            "state": "Oregon"
+          },
+          "ip": "44.238.82.114",
+          "version": "V4"
+        }
+      ]
+    },
+    "securityContext": {
+      "asNumber": 16509,
+      "asOrg": "amazon.com  inc.",
+      "domain": "amazonaws.com",
+      "isProxy": false,
+      "isp": "amazon.com inc"
+    },
+    "severity": "INFO",
+    "target": [
+      {
+        "alternateId": "Okta Admin Console",
+        "detailEntry": {
+          "signOnModeType": "OPENID_CONNECT"
+        },
+        "displayName": "Okta Admin Console",
+        "id": "0oa1x43tu9zWxYjYx697",
+        "type": "AppInstance"
+      },
+      {
+        "alternateId": "unknown",
+        "displayName": "Nick DeRobertis",
+        "id": "0ua1x43tzkTDP7JTV697",
+        "type": "AppUser"
+      }
+    ],
+    "transaction": {
+      "detail": {},
+      "id": "YvOnoBLh-7Q87V90SW41jwAAD2I",
+      "type": "WEB"
+    },
+    "uuid": "d8e5296b-18a9-11ed-989a-3f71858543e1",
+    "version": "0"
+  },
+  {
+    "actor": {
+      "alternateId": "nick@claimfound.com",
+      "displayName": "Nick DeRobertis",
+      "id": "00u1x43tzgPcPUSOn697",
+      "type": "User"
+    },
+    "authenticationContext": {
+      "authenticationStep": 0,
+      "externalSessionId": "idx48oTbWfMRqSiXJM_zWAHSg"
+    },
+    "client": {
+      "device": "Computer",
+      "geographicalContext": {
+        "city": "Falls Church",
+        "country": "United States",
+        "geolocation": {
+          "lat": 38.8597,
+          "lon": -77.198
+        },
+        "postalCode": "22042",
+        "state": "Virginia"
+      },
+      "id": "okta.ee074f99-1b5b-513e-8ea6-f8beeab8dbb9",
+      "ipAddress": "108.18.228.155",
+      "userAgent": {
+        "browser": "CHROME",
+        "os": "Linux",
+        "rawUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+      },
+      "zone": "null"
+    },
+    "debugContext": {
+      "debugData": {
+        "initiationType": "NA",
+        "redirectUri": "https://trial-4917051.okta.com/plugin/callback",
+        "requestId": "YvOo7IOSPSCm6awz6nG--wAAA64",
+        "dtHash": "f02a931fb3d56c9a89485e39c621d0d4e35022f123e894da707a7185afce5ba8",
+        "signOnMode": "OpenID Connect",
+        "requestUri": "/oauth2/v1/token",
+        "threatSuspected": "false",
+        "url": "/oauth2/v1/token?"
+      }
+    },
+    "displayMessage": "User single sign on to app",
+    "eventType": "user.authentication.sso",
+    "legacyEventType": "app.auth.sso",
+    "outcome": {
+      "result": "SUCCESS"
+    },
+    "published": "2022-08-10T12:47:40.791Z",
+    "request": {
+      "ipChain": [
+        {
+          "geographicalContext": {
+            "city": "Falls Church",
+            "country": "United States",
+            "geolocation": {
+              "lat": 38.8597,
+              "lon": -77.198
+            },
+            "postalCode": "22042",
+            "state": "Virginia"
+          },
+          "ip": "108.18.228.155",
+          "version": "V4"
+        }
+      ]
+    },
+    "securityContext": {
+      "asNumber": 701,
+      "asOrg": "verizon",
+      "domain": "verizon.net",
+      "isProxy": false,
+      "isp": "verizon"
+    },
+    "severity": "INFO",
+    "target": [
+      {
+        "alternateId": "Okta Browser Plugin",
+        "detailEntry": {
+          "signOnModeType": "OPENID_CONNECT"
+        },
+        "displayName": "Okta Browser Plugin",
+        "id": "0oa1x43tywwtDzHsR697",
+        "type": "AppInstance"
+      },
+      {
+        "alternateId": "nick@claimfound.com",
+        "displayName": "Nick DeRobertis",
+        "id": "0ua1x4tylhtd7737Q697",
+        "type": "AppUser"
+      }
+    ],
+    "transaction": {
+      "detail": {},
+      "id": "YvOo7IOSPSCm6awz6nG--wAAA64",
+      "type": "WEB"
+    },
+    "uuid": "9ee8b105-18aa-11ed-af3e-3533a1d21a8a",
+    "version": "0"
+  },
+  {
+    "actor": {
+      "alternateId": "nick@claimfound.com",
+      "displayName": "Nick DeRobertis",
+      "id": "00u1x43tzgPcPUSOn697",
+      "type": "User"
+    },
+    "authenticationContext": {
+      "authenticationStep": 0,
+      "externalSessionId": "idx48oTbWfMRqSiXJM_zWAHSg"
+    },
+    "client": {
+      "device": "Computer",
+      "geographicalContext": {
+        "city": "Falls Church",
+        "country": "United States",
+        "geolocation": {
+          "lat": 38.8597,
+          "lon": -77.198
+        },
+        "postalCode": "22042",
+        "state": "Virginia"
+      },
+      "ipAddress": "108.18.228.155",
+      "userAgent": {
+        "browser": "CHROME",
+        "os": "Linux",
+        "rawUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+      },
+      "zone": "null"
+    },
+    "debugContext": {
+      "debugData": {
+        "initiationType": "NA",
+        "requestId": "YvOo8DSWMzsnyo1PrvtDZgAAAyI",
+        "dtHash": "f02a931fb3d56c9a89485e39c621d0d4e35022f123e894da707a7185afce5ba8",
+        "signOnMode": "Secure Web Authentication",
+        "requestUri": "/app/slack/0oa1x4sjz2kBCQ2eb697/slack_ink",
+        "threatSuspected": "false",
+        "url": "/app/slack/0oa1x4sjz2kBCQ2eb697/slack_ink?"
+      }
+    },
+    "displayMessage": "User single sign on to app",
+    "eventType": "user.authentication.sso",
+    "legacyEventType": "app.auth.sso",
+    "outcome": {
+      "result": "SUCCESS"
+    },
+    "published": "2022-08-10T12:47:44.391Z",
+    "request": {
+      "ipChain": [
+        {
+          "geographicalContext": {
+            "city": "Falls Church",
+            "country": "United States",
+            "geolocation": {
+              "lat": 38.8597,
+              "lon": -77.198
+            },
+            "postalCode": "22042",
+            "state": "Virginia"
+          },
+          "ip": "108.18.228.155",
+          "version": "V4"
+        }
+      ]
+    },
+    "securityContext": {
+      "asNumber": 701,
+      "asOrg": "verizon",
+      "domain": "verizon.net",
+      "isProxy": false,
+      "isp": "verizon"
+    },
+    "severity": "INFO",
+    "target": [
+      {
+        "alternateId": "Slack",
+        "detailEntry": {
+          "signOnModeType": "AUTO_LOGIN"
+        },
+        "displayName": "Slack",
+        "id": "0oa1x4sjz2kBCQ2eb697",
+        "type": "AppInstance"
+      },
+      {
+        "alternateId": "nick@claimfound.com",
+        "displayName": "Nick DeRobertis",
+        "id": "0ua1x4tqvr3SHvwjC697",
+        "type": "AppUser"
+      }
+    ],
+    "transaction": {
+      "detail": {},
+      "id": "YvOo8DSWMzsnyo1PrvtDZgAAAyI",
+      "type": "WEB"
+    },
+    "uuid": "a10e01e8-18aa-11ed-aee1-09f0a2b0213f",
+    "version": "0"
+  },
+  {
+    "actor": {
+      "alternateId": "nick@claimfound.com",
+      "displayName": "Nick DeRobertis",
+      "id": "00u1x43tzgPcPUSOn697",
+      "type": "User"
+    },
+    "authenticationContext": {
+      "authenticationStep": 0,
+      "externalSessionId": "unknown"
+    },
+    "client": {
+      "device": "Unknown",
+      "geographicalContext": {
+        "city": "Boardman",
+        "country": "United States",
+        "geolocation": {
+          "lat": 45.8234,
+          "lon": -119.7257
+        },
+        "postalCode": "97818",
+        "state": "Oregon"
+      },
+      "id": "okta.b58d5b75-07d4-5f25-bf59-368a1261a405",
+      "ipAddress": "44.238.82.114",
+      "userAgent": {
+        "browser": "UNKNOWN",
+        "os": "Unknown",
+        "rawUserAgent": "Okta-Integrations"
+      },
+      "zone": "null"
+    },
+    "debugContext": {
+      "debugData": {
+        "initiationType": "NA",
+        "redirectUri": "https://trial-4917051-admin.okta.com/admin/sso/callback",
+        "requestId": "YvOsmh6rQ-POiXakF5OeKAAACPc",
+        "dtHash": "741f97411c022e6001fac6986460e61614cce04dc7a7336121f0f3646f697369",
+        "signOnMode": "OpenID Connect",
+        "requestUri": "/oauth2/v1/token",
+        "threatSuspected": "false",
+        "url": "/oauth2/v1/token?"
+      }
+    },
+    "displayMessage": "User single sign on to app",
+    "eventType": "user.authentication.sso",
+    "legacyEventType": "app.auth.sso",
+    "outcome": {
+      "result": "SUCCESS"
+    },
+    "published": "2022-08-10T13:03:22.910Z",
+    "request": {
+      "ipChain": [
+        {
+          "geographicalContext": {
+            "city": "Boardman",
+            "country": "United States",
+            "geolocation": {
+              "lat": 45.8234,
+              "lon": -119.7257
+            },
+            "postalCode": "97818",
+            "state": "Oregon"
+          },
+          "ip": "44.238.82.114",
+          "version": "V4"
+        }
+      ]
+    },
+    "securityContext": {
+      "asNumber": 16509,
+      "asOrg": "amazon.com  inc.",
+      "domain": "amazonaws.com",
+      "isProxy": false,
+      "isp": "amazon.com inc"
+    },
+    "severity": "INFO",
+    "target": [
+      {
+        "alternateId": "Okta Admin Console",
+        "detailEntry": {
+          "signOnModeType": "OPENID_CONNECT"
+        },
+        "displayName": "Okta Admin Console",
+        "id": "0oa1x43tu9zWxYjYx697",
+        "type": "AppInstance"
+      },
+      {
+        "alternateId": "unknown",
+        "displayName": "Nick DeRobertis",
+        "id": "0ua1x43tzkTDP7JTV697",
+        "type": "AppUser"
+      }
+    ],
+    "transaction": {
+      "detail": {},
+      "id": "YvOsmh6rQ-POiXakF5OeKAAACPc",
+      "type": "WEB"
+    },
+    "uuid": "d074a412-18ac-11ed-841d-9db2bc7276af",
+    "version": "0"
+  }
+]

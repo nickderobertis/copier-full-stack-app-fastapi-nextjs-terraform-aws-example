@@ -1,0 +1,30 @@
+name: Load Secrets into Environment
+description: "Loads secrets from AWS SSM Parameter Store into the environment"
+inputs:
+  environment:
+    description: 'The environment to deploy in.'
+    required: true
+  aws-access-key-id:
+    description: 'The AWS access key ID to use.'
+    required: true
+  aws-secret-access-key:
+    description: 'The AWS secret access key to use.'
+    required: true
+  staging-subdomain:
+    description: 'The subdomain to use for staging deploys.'
+    required: true
+    default: staging
+
+runs:
+  using: composite
+  steps:
+    - name: Load secrets into environment variables
+      shell: bash
+      run: |
+        cd ./infra/${{ inputs.environment }}
+        ./scripts/source-secrets-from-ssm.sh >> $GITHUB_ENV
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        NETWORK_STAGING_SUBDOMAIN: ${{ inputs.staging-subdomain }}
+        APP_STAGING_NAME_SUFFIX: ${{ inputs.staging-subdomain }}

@@ -1,0 +1,17 @@
+# Environment variables
+.env
+.env.terraform
+
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+
+# Terragrunt
+.terragrunt-cache/
+backend.tf
+provider.tf
+
+# Generated
+**/generated/**/*
+!**/generated/.gitkeep

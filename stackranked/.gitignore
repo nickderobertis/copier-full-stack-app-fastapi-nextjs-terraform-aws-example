@@ -1,0 +1,8 @@
+app/openapi.json
+.env
+okta-keypair.json
+Notebooks/Scratch*
+*.csv
+Data
+Analysis
+oauth2_gmail.json

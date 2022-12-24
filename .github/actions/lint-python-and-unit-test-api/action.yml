@@ -1,0 +1,56 @@
+
+name: Lint Python and Run API Unit Tests
+description: "Lint Python and Run API Unit Tests"
+
+runs:
+  using: composite
+  steps:
+    - name: Install pipenv
+      shell: bash
+      run: pipx install pipenv
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+        cache: pipenv
+    - uses: actions/cache@v3
+      name: Cache global dependencies
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('*-requirements.txt') }}
+    - name: Get Venvs Path
+      id: get-venv-path
+      shell: python
+      run: |
+        from pathlib import Path
+        home = Path("~").expanduser()
+        venv_path = home / ".venvs"
+        print(f"::set-output name=venv-path::{venv_path}")
+    - uses: actions/cache@v3
+      id: cache-venvs
+      name: Cache venvs
+      with:
+        path: ${{ steps.get-venv-path.outputs.venv-path }}
+        key: ${{ env.pythonLocation }}-venvs-${{ hashFiles('*-requirements.txt') }}
+    - name: Install main dependencies
+      shell: bash
+      run: |
+        cd copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        pipenv --python "3.10" sync
+    - name: Install global dependencies
+      shell: bash
+      run: |
+        pip install -r global-requirements.txt
+    - name: Create venvs
+      shell: bash
+      if: steps.cache-venvs.outputs.cache-hit != 'true'
+      run: |
+        PIPENV_PIPFILE=copier_full_stack_app_fastapi_nextjs_terraform_aws_example/Pipfile pipenv run nox -s venv -- create lint
+    - name: Check code formatting and linting
+      shell: bash
+      run: PIPENV_PIPFILE=copier_full_stack_app_fastapi_nextjs_terraform_aws_example/Pipfile pipenv run nox
+    - name: Run unit tests
+      shell: bash
+      run: |
+        cd copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        pipenv run python -m pytest tests/unit

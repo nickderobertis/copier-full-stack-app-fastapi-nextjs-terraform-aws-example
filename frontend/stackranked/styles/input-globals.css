@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.reactive-btn-wrapper {
+    width: 100%;
+}
+
+.reactive-btn {
+    /* Tailwind blue */
+    --reactive-button-primary-color: rgb(37 99 235) !important;
+    /* Tailwind default rounded */
+    --reactive-button-border-radius: 0.25rem !important;
+}
