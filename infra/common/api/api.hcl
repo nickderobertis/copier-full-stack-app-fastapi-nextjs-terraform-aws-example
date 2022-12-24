@@ -12,7 +12,7 @@ EOF
 
 locals {
   app_short_name    = get_env("APP_SHORT_NAME")
-  project_directory = abspath("${get_terragrunt_dir()}/../../../../copier_full_stack_app_fastapi_nextjs_terraform_aws_example")
+  project_directory = abspath("${get_terragrunt_dir()}/../../../../backend")
 }
 
 terraform {

@@ -4,13 +4,13 @@ on:
     types: [ closed ]
 
 env:
-  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
-  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
-  APP_SHORT_NAME: cop
+  NETWORK_DOMAIN_NAME: not-a-real-url.com
+  GLOBAL_APP_NAME: app-example
+  APP_SHORT_NAME: app
   APP_STAGING_NAME_SUFFIX: staging
   NETWORK_HEALTH_CHECK_INTERVAL: 30
   NETWORK_STAGING_SUBDOMAIN: staging
-  SENTRY_ORGANIZATION_SLUG: nickderobertis
+  SENTRY_ORGANIZATION_SLUG: nick-derobertis
 
 jobs:
   changes:

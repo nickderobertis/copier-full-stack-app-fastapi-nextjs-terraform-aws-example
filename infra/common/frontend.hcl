@@ -1,5 +1,5 @@
 locals {
-  project_directory = abspath("${get_terragrunt_dir()}/../../../frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example")
+  project_directory = abspath("${get_terragrunt_dir()}/../../../frontend/app-example")
   sentry_auth_token = get_env("SENTRY_AUTH_TOKEN")
   google_scopes     = get_env("GOOGLE_SCOPES")
 }

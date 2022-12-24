@@ -1,5 +1,5 @@
 [tool.black]
-include = 'copier_full_stack_app_fastapi_nextjs_terraform_aws_example.*\.pyi?$|tests.*\.pyi?$'
+include = 'backend.*\.pyi?$|tests.*\.pyi?$'
 
 [tool.isort]
 profile = "black"

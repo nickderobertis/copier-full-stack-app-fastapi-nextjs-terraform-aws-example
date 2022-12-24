@@ -1,3 +1,3 @@
 """
-copier-full-stack-app-fastapi-nextjs-terraform-aws-example API and packages
+App Example API and packages
 """

@@ -1,6 +1,6 @@
-# copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+# App Example
 
-copier-full-stack-app-fastapi-nextjs-terraform-aws-example Next.js web frontend
+App Example Next.js web frontend
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

@@ -11,7 +11,7 @@ ecr_address=$(echo $output | jq -r '.ecr_address.value')
 # Log into docker first to fail fast if no access
 aws ecr get-login-password --region "$aws_region" | docker login --username AWS --password-stdin "$ecr_address"
 
-project_path=../../../../copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+project_path=../../../../backend
 
 hash=$(LC_ALL=POSIX find $project_path -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum | cut -d " " -f 1)
 full_image_name="$base_image_name:$hash"

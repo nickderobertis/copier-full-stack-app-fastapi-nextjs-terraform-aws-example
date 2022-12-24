@@ -14,7 +14,7 @@ class LoggingConfig(BaseSettings):
     level: LogLevel = LogLevel.INFO
 
     class Config:
-        env_prefix = "COPIER_FULL_STACK_APP_FASTAPI_NEXTJS_TERRAFORM_AWS_EXAMPLE_LOG_"
+        env_prefix = "BACKEND_LOG_"
 
     @validator("level", pre=True)
     def cast_log_level(cls, v):
@@ -37,7 +37,7 @@ logging.basicConfig(
     handlers=[RichHandler(rich_tracebacks=True)],
 )
 
-log = logging.getLogger("copier-full-stack-app-fastapi-nextjs-terraform-aws-example")
+log = logging.getLogger("backend")
 
 if __name__ == "__main__":
     log.info("info level")

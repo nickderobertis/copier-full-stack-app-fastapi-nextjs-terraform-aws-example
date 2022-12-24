@@ -36,7 +36,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        cd ./copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        cd ./backend
         pipenv sync
     - uses: ./.github/actions/load-secrets-into-env
       with:
@@ -48,7 +48,7 @@ runs:
       id: get-latest-revision
       shell: bash
       run: |
-        cd ./copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        cd ./backend
         revision=$(PIPENV_VERBOSITY=-1 pipenv run --quiet ./alembic/scripts/latest-head.sh)
         echo "::set-output name=revision::$revision"
     - uses: actions/checkout@v3

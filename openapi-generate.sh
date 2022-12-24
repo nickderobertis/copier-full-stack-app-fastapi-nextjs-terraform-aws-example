@@ -1,4 +1,4 @@
-relative_out_path=frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+relative_out_path=frontend/app-example/lib/api/api-client
 
 # TODO: Remove need to set these variables to run codegen
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm \
@@ -8,7 +8,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm \
 
 echo "Generating TypeScript client"
 docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
-    -i /local/copier_full_stack_app_fastapi_nextjs_terraform_aws_example/app/openapi.json \
+    -i /local/backend/app/openapi.json \
     -g typescript-fetch \
     -o /local/$relative_out_path \
     -c /local/ts-openapi-config.yml

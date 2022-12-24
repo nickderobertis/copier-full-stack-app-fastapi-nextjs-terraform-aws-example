@@ -40,8 +40,8 @@ runs:
       run: |
         # TODO: Figure out how we can avoid having to explicitly reference secrets.
         #  Pretty sure it is not working with all secrets because of the multi-line openvpn config secret
-        printenv | grep EMAIL_ > copier_full_stack_app_fastapi_nextjs_terraform_aws_example/.env
-        printenv | grep FE_URL >> copier_full_stack_app_fastapi_nextjs_terraform_aws_example/.env
+        printenv | grep EMAIL_ > backend/.env
+        printenv | grep FE_URL >> backend/.env
     - name: Wait for DB to be ready
       shell: bash
       run: |

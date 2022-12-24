@@ -35,7 +35,7 @@ runs:
     - name: Install main dependencies
       shell: bash
       run: |
-        cd copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        cd backend
         pipenv --python "3.10" sync
     - name: Install global dependencies
       shell: bash
@@ -45,12 +45,12 @@ runs:
       shell: bash
       if: steps.cache-venvs.outputs.cache-hit != 'true'
       run: |
-        PIPENV_PIPFILE=copier_full_stack_app_fastapi_nextjs_terraform_aws_example/Pipfile pipenv run nox -s venv -- create lint
+        PIPENV_PIPFILE=backend/Pipfile pipenv run nox -s venv -- create lint
     - name: Check code formatting and linting
       shell: bash
-      run: PIPENV_PIPFILE=copier_full_stack_app_fastapi_nextjs_terraform_aws_example/Pipfile pipenv run nox
+      run: PIPENV_PIPFILE=backend/Pipfile pipenv run nox
     - name: Run unit tests
       shell: bash
       run: |
-        cd copier_full_stack_app_fastapi_nextjs_terraform_aws_example
+        cd backend
         pipenv run python -m pytest tests/unit
