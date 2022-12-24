@@ -2,11 +2,11 @@ name: Deploy Previews for PR
 on: [pull_request]
 
 env:
-  NETWORK_DOMAIN_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
-  GLOBAL_APP_NAME: copier-full-stack-app-fastapi-nextjs-terraform-aws-example
-  APP_SHORT_NAME: cop
+  NETWORK_DOMAIN_NAME: not-a-real-url.com
+  GLOBAL_APP_NAME: app-example
+  APP_SHORT_NAME: app
   NETWORK_HEALTH_CHECK_INTERVAL: 30
-  SENTRY_ORGANIZATION_SLUG: nickderobertis
+  SENTRY_ORGANIZATION_SLUG: nick-derobertis
 
 jobs:
   changes:
@@ -74,8 +74,8 @@ jobs:
     outputs:
       fe-url: ${{ steps.deploy-vercel-preview.outputs.preview-url }}
       # Always use staging API for FE previews
-      api-url: https://api-staging.copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
-      monitoring-url: https://monitoring-staging.copier-full-stack-app-fastapi-nextjs-terraform-aws-example.com
+      api-url: https://api-staging.not-a-real-url.com
+      monitoring-url: https://monitoring-staging.not-a-real-url.com
     steps:
       - uses: actions/checkout@v3
       - name: Retrieve OpenAPI codegen files
@@ -83,7 +83,7 @@ jobs:
         with:
           name: openapi-codegen
 
-          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+          path: frontend/app-example/lib/api/api-client
       - uses: ./.github/actions/setup-terragrunt
         with:
           environment: staging
@@ -110,7 +110,7 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ steps.vercel-project-id.outputs.vercel-project-id }}
-          working-directory: ./frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example
+          working-directory: ./frontend/app-example
           # TODO: Getting Error! The deployment is not ready when using aliases
 #          alias-domains: |
 #            pr-{{PR_NUMBER}}.vercel.app
@@ -129,7 +129,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: openapi-codegen
-          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+          path: frontend/app-example/lib/api/api-client
       - uses: ./.github/actions/preview-terragrunt
         id: preview-terragrunt
         with:
@@ -155,7 +155,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: openapi-codegen
-          path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+          path: frontend/app-example/lib/api/api-client
       - uses: ./.github/actions/preview-terragrunt
         id: preview-terragrunt
         with:

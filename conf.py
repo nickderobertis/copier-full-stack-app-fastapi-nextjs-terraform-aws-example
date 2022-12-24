@@ -2,7 +2,7 @@
 # Sphinx configuration is in the docsrc folder
 
 # Main package name
-PACKAGE_NAME = "copier-full-stack-app-fastapi-nextjs-terraform-aws-example"
+PACKAGE_NAME = "backend"
 
 # Directory name of package
 PACKAGE_DIRECTORY = ""

@@ -29,7 +29,7 @@ runs:
       uses: actions/download-artifact@v3
       with:
         name: openapi-codegen
-        path: frontend/copier-full-stack-app-fastapi-nextjs-terraform-aws-example/lib/api/api-client
+        path: frontend/app-example/lib/api/api-client
     - uses: ./.github/actions/modify-infra
       with:
         environment: ${{ inputs.environment }}

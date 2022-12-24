@@ -1,5 +1,5 @@
 {
-  "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws-example",
+  "name": "app-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
