@@ -11,5 +11,18 @@
       "render_relative_root_in_template": "output"
     }
   ],
-  "applied_templates": []
+  "applied_templates": [
+    {
+      "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
+      "data": {
+        "author": "Nick DeRobertis",
+        "full_name": "copier-full-stack-app-fastapi-nextjs-terraform-aws-example",
+        "main_branch_name": "main",
+        "short_description": "Example output for copier-full-stack-app-fastapi-nextjs-terraform-aws"
+      },
+      "version": "7f1a817277920d89f327931f4f6c6d8d",
+      "add_mode": "local",
+      "root": "."
+    }
+  ]
 }
