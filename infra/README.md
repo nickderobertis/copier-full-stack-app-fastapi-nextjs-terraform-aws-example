@@ -15,15 +15,15 @@ cd into `global` and run `terragrunt init` and `terragrunt apply`.
 #### Slack Alerts
 
 To set up Slack alerting, you need a Slack Workspace and then to create an app
-connected to that workspace. Create the app with the following manifest:
+connected to that workspace. [Create the app](https://api.slack.com/apps) with the following manifest:
 
 ```yaml
 _metadata:
   major_version: 1
   minor_version: 1
 display_information:
-  name: app
-  description: App description
+  name: App Example Monitoring
+  description: App Example System Monitoring
   background_color: "#d982b5"
 features:
   bot_user:
@@ -35,6 +35,11 @@ features:
     messages_tab_read_only_enabled: true
 oauth_config:
   scopes:
+    user:
+      - channels:write
+      - channels:read
+      - chat:write
+      - files:write
     bot:
       - channels:history
       - channels:join
@@ -49,12 +54,21 @@ settings:
     is_enabled: true
   org_deploy_enabled: false
   socket_mode_enabled: true
+  token_rotation_enabled: false
+settings:
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
 ```
 
 Then you will need to:
 
-1. Generate a bot token and add it to the `.env` file as `SLACK_TOKEN`
-2. Add the incoming webhook app to the workspace and add the URL to the `.env` file as `SLACK_WEBHOOK_URL`
+1. Add the app to the workspace
+2. Go to "Oauth and Permissions", copy the user token and add it to the `.env` file as `SLACK_TOKEN`
+3. Add the incoming webhook app to the workspace and add the URL to the `.env` file as `SLACK_WEBHOOK_URL`
+
+> TODO: Is step 3 necessary?
 
 ## Deployment Structure
 
