@@ -2,13 +2,25 @@
 
 ## Setup
 
+### Prerequisites
+
+#### Direnv
+
 Ensure `direnv` is installed and run `direnv allow`. It will create a `.env` file with
 values to fill out.
+
+#### Terragrunt & Terraform
+
+Install Terraform and Terragrunt to be able to manage infrastructure locally.
 
 ### Global Environment
 
 The global environment is not managed by CI/CD, it must be manually created and updated.
-cd into `global` and run `terragrunt init` and `terragrunt apply`.
+cd into `global` and run `terragrunt run-all init` and `terragrunt run-all apply`.
+
+If you see errors talking about dependencies and module with no outputs, `cd` into `global/network`
+and run `terragrunt apply` to create the network first. Then once it completes successfully,
+`cd` back out into global and run `terragrunt run-all init` and `terragrunt run-all apply` again.
 
 ### Monitoring
 
