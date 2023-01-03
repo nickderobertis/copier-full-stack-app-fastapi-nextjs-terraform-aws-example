@@ -30,3 +30,5 @@ sentry-sdk = {extras = ["fastapi"], version = "*"}
 alembic = "*"
 pydantic-factories = "*"
 sqlmodel = "*"
+rich = "*"
+pydantic = {extras = ["dotenv"], version = "*"}

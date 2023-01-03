@@ -39,7 +39,7 @@ class TempMail(object):
         Return list of available domains for use in email address.
         """
         if not hasattr(self, "_available_domains"):
-            url = "https://{0}/request/domains/format/json/".format(self.api_domain)
+            url = "https://{0}/request/domains/".format(self.api_domain)
             req = requests.get(
                 url,
                 headers={"X-RapidAPI-Key": self.api_key, "Accept": "application/json"},
@@ -102,9 +102,7 @@ class TempMail(object):
         if email_hash is None:
             email_hash = self.get_hash(email)
 
-        url = "https://{0}/request/mail/id/{1}/format/json/".format(
-            self.api_domain, email_hash
-        )
+        url = "https://{0}/request/mail/id/{1}/".format(self.api_domain, email_hash)
         req = requests.get(
             url, headers={"X-RapidAPI-Key": self.api_key, "Accept": "application/json"}
         )
@@ -120,9 +118,7 @@ class TempMail(object):
         if email_hash is None:
             email_hash = self.get_hash(email)
 
-        url = "https://{0}/request/delete/id/{1}/format/json/".format(
-            self.api_domain, email_hash
-        )
+        url = "https://{0}/request/delete/id/{1}/".format(self.api_domain, email_hash)
 
         req = requests.get(
             url, headers={"X-RapidAPI-Key": self.api_key, "Accept": "application/json"}
@@ -139,7 +135,7 @@ class TempMail(object):
         if email_hash is None:
             email_hash = self.get_hash(email)
 
-        url = "https://{0}/request/attachments/id/{1}/format/json/".format(
+        url = "https://{0}/request/attachments/id/{1}/".format(
             self.api_domain, email_hash
         )
 
@@ -158,9 +154,7 @@ class TempMail(object):
         if email_hash is None:
             email_hash = self.get_hash(email)
 
-        url = "https://{0}/request/one_mail/id/{1}/format/json/".format(
-            self.api_domain, email_hash
-        )
+        url = "https://{0}/request/one_mail/id/{1}/".format(self.api_domain, email_hash)
 
         req = requests.get(
             url, headers={"X-RapidAPI-Key": self.api_key, "Accept": "application/json"}
@@ -177,9 +171,7 @@ class TempMail(object):
         if email_hash is None:
             email_hash = self.get_hash(email)
 
-        url = "https://{0}/request/source/id/{1}/format/json/".format(
-            self.api_domain, email_hash
-        )
+        url = "https://{0}/request/source/id/{1}/".format(self.api_domain, email_hash)
 
         req = requests.get(
             url, headers={"X-RapidAPI-Key": self.api_key, "Accept": "application/json"}
@@ -187,21 +179,17 @@ class TempMail(object):
         return req.json()
 
 
-class Id(BaseModel):
-    id: str = Field(alias="$oid")
+class EmailIds(BaseModel):
+    oid: str
 
 
-class NumberLong(BaseModel):
-    number_long: str = Field(alias="$numberLong")
-
-
-class Date(BaseModel):
-    date: NumberLong = Field(alias="$date")
+class CreatedAt(BaseModel):
+    milliseconds: int
 
 
 class Email(BaseModel):
-    id: Id = Field(alias="_id")
-    created_at: Date = Field(alias="createdAt")
+    id: EmailIds = Field(alias="_id")
+    created_at: CreatedAt = Field(alias="createdAt")
     mail_id: str
     mail_address_id: str
     mail_from: str
