@@ -11,6 +11,11 @@ RUN mkdir .venv
 RUN pipenv sync
 RUN mv .venv/ /venv
 
+# Use sed to replace VIRTUAL_ENV='/api/.venv' with VIRTUAL_ENV='/venv' in /venv/bin/activate
+RUN sed -i 's/\/api\/.venv/\/venv/g' /venv/bin/activate
+
 COPY . .
+
+ENV VIRTUAL_ENV=/venv
 
 CMD ["./start.sh"]

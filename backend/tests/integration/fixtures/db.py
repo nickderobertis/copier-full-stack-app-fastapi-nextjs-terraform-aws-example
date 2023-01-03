@@ -30,7 +30,14 @@ def run_migrations() -> None:
             "head",
         ]
         result = subprocess.run(
-            ["alembic", *alembic_args], check=True, capture_output=True
+            [
+                "python",
+                "-m",
+                "alembic",
+                *alembic_args
+            ],
+            check=True,
+            capture_output=True
         )
         log.info(result.stdout.decode("utf-8"))
 
