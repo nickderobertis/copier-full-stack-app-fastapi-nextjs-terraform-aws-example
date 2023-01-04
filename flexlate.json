@@ -4,7 +4,7 @@
       "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "path": "/home/runner/work/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "type": "copier",
-      "version": "f0bf39a3ea30f3e6f22ebd20db2a876f",
+      "version": "7ed0c6bc0b399ddefcae3f1159ccfa56",
       "git_url": null,
       "target_version": null,
       "render_relative_root_in_output": ".",
@@ -30,7 +30,7 @@
         "author": "Nick DeRobertis",
         "author_email": "derobertis.nick@gmail.com"
       },
-      "version": "f0bf39a3ea30f3e6f22ebd20db2a876f",
+      "version": "7ed0c6bc0b399ddefcae3f1159ccfa56",
       "add_mode": "local",
       "root": "."
     }
