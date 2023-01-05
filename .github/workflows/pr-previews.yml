@@ -211,6 +211,7 @@ jobs:
           max-attempts: 150
           retry-delay: 6
 
+  # TODO: Make sure e2e tests run against FE previews, currently they are hitting staging
   e2e-test:
     needs: [health-check]
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
