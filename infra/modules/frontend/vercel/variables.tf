@@ -19,6 +19,12 @@ variable "domain_name" {
   description = "The domain name to associate with the project"
 }
 
+variable "is_primary_domain" {
+  type        = bool
+  description = "Whether the domain is the primary domain for the project"
+  default     = false
+}
+
 variable "sentry_client_dsn" {
   type = string
 }

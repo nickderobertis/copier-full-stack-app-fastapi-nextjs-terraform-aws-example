@@ -8,6 +8,7 @@ include "common" {
 }
 
 inputs = {
-  project_name = "${include.root.inputs.app_name}-web"
-  domain_name  = include.root.inputs.fe_fqdn
+  project_name      = "${include.root.inputs.app_name}-web"
+  domain_name       = include.root.inputs.fe_fqdn
+  is_primary_domain = true
 }

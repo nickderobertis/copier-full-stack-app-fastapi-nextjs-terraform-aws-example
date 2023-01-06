@@ -2,11 +2,14 @@ terraform {
   required_providers {
     vercel = {
       source  = "vercel/vercel"
-      version = "~> 0.8"
+      version = "~> 0.11"
     }
   }
 }
 
+locals {
+  full_primary_domain_name = var.is_primary_domain ? "www.${var.domain_name}" : var.domain_name
+}
 data "vercel_project_directory" "this" {
   path = var.project_directory
 }
@@ -71,7 +74,15 @@ resource "vercel_deployment" "this" {
   production  = true
 }
 
-resource "vercel_project_domain" "this" {
+resource "vercel_project_domain" "primary_domain" {
+  project_id = vercel_project.this.id
+  domain     = local.full_primary_domain_name
+}
+
+resource "vercel_project_domain" "redirect_to_www" {
+  count      = var.is_primary_domain ? 1 : 0
   project_id = vercel_project.this.id
   domain     = var.domain_name
+
+  redirect = vercel_project_domain.primary_domain.domain
 }

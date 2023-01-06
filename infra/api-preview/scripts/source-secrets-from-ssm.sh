@@ -9,6 +9,9 @@ region=$($region_script)
 full_app_name=$($full_app_name_script)
 source_params_script="$(dirname $(dirname $(dirname $(realpath $0)) ) )/scripts/internal/source-params.sh"
 
+# Source staging secrets as part of the environment is shared with staging
+FULL_APP_NAME="$GLOBAL_APP_NAME-staging" source $source_params_script us-east-1
+
 # Source app-level secrets
 FULL_APP_NAME="$full_app_name" source $source_params_script $region
 

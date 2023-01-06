@@ -6,7 +6,7 @@ locals {
   record_value = var.record_type == "A" ? "76.76.21.21" : "cname.vercel-dns.com"
 }
 
-module "records" {
+module "main_record" {
   source = "../../records"
 
   zone_name = var.route53_zone_name
@@ -18,6 +18,24 @@ module "records" {
       type    = var.record_type
       ttl     = 60
       records = [local.record_value]
+    }
+  ]
+}
+
+
+module "www_record" {
+  source = "../../records"
+  count  = var.record_type == "A" ? 1 : 0
+
+  zone_name = var.route53_zone_name
+  zone_id   = var.route53_zone_id
+
+  records = [
+    {
+      name    = "www"
+      type    = "CNAME"
+      ttl     = 60
+      records = ["cname.vercel-dns.com"]
     }
   ]
 }
