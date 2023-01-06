@@ -16,6 +16,7 @@ module "vercel" {
   project_directory        = var.project_directory
   api_url                  = var.api_url
   domain_name              = var.domain_name
+  is_primary_domain        = var.is_primary_domain
   sentry_client_dsn        = module.sentry.project_details.dsn_public
   sentry_server_dsn        = module.sentry.project_details.dsn_secret
   sentry_project_slug      = local.sentry_project_slug
