@@ -4,7 +4,7 @@
       "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "path": "/home/runner/work/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws/copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "type": "copier",
-      "version": "5fe45644daf2bd7d2900874f11bc0ebc",
+      "version": "01cce0be8979bcf157903b061dba77d1",
       "git_url": null,
       "target_version": null,
       "render_relative_root_in_output": ".",
@@ -16,7 +16,7 @@
       "name": "copier-full-stack-app-fastapi-nextjs-terraform-aws",
       "data": {
         "full_name": "copier-full-stack-app-fastapi-nextjs-terraform-aws-example",
-        "short_description": "Example output for copier-full-stack-app-fastapi-nextjs-terraform-aws",
+        "short_description": "Example output for copier-full-stack-app-fastapi-nextjs-terraform-aws. See the template at https://github.com/nickderobertis/copier-full-stack-app-fastapi-nextjs-terraform-aws",
         "repo_name": "copier-full-stack-app-fastapi-nextjs-terraform-aws-example",
         "repo_username": "nickderobertis",
         "application_name": "App Example",
@@ -30,7 +30,7 @@
         "author": "Nick DeRobertis",
         "author_email": "derobertis.nick@gmail.com"
       },
-      "version": "5fe45644daf2bd7d2900874f11bc0ebc",
+      "version": "01cce0be8979bcf157903b061dba77d1",
       "add_mode": "local",
       "root": "."
     }
