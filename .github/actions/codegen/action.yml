@@ -10,7 +10,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: frontend/app-example/lib/api/api-client
-        key: openapi-codegen-${{ runner.os }}-${{ hashFiles('{{ package_folder }}/**') }}-${{ hashFiles('openapi-generate.sh') }}
+        key: openapi-codegen-${{ runner.os }}-${{ hashFiles('backend/**') }}-${{ hashFiles('openapi-generate.sh') }}
     - name: Build API container
       shell: bash
       if: steps.cache-codegen.outputs.cache-hit != 'true'
